@@ -1,9 +1,15 @@
 <template>
-  <view class="page">
-    <AppNavBar title="批量生成" subtitle="换行或空格分割" />
+  <view class="page" :class="themeClass">
+    <AppNavBar
+      title="批量生成"
+      subtitle="换行 / 空格 · 防抖优化"
+      :is-dark="isDark"
+      @toggle-theme="toggleTheme"
+    />
 
     <view class="content">
-      <view class="input-card">
+      <view class="input-card glass-card fade-in">
+        <FormatPicker v-model="format" />
         <view class="split-tabs">
           <view
             v-for="tab in splitTabs"
@@ -18,20 +24,31 @@
         <textarea
           v-model="rawContent"
           class="batch-input"
-          placeholder="每行一个条形码，或用空格分隔&#10;例如：&#10;123456789012&#10;HELLO123"
+          placeholder="每行一个，或用空格分隔"
           placeholder-class="placeholder"
         />
-        <text class="hint">共 {{ items.length }} 条有效内容</text>
+        <text class="hint">共 {{ debouncedItems.length }} 条（输入防抖 400ms）</text>
       </view>
 
       <scroll-view scroll-y class="list" :show-scrollbar="false">
-        <view v-if="!items.length" class="empty">输入内容后自动生成预览</view>
-        <view v-for="(item, index) in items" :key="item + index" class="batch-item">
+        <EmptyState
+          v-if="!debouncedItems.length"
+          icon="☰"
+          title="暂无批量内容"
+          desc="输入多条数据后将在此预览"
+        />
+        <view
+          v-for="(item, index) in debouncedItems"
+          :key="item + '-' + index"
+          class="batch-item fade-in"
+        >
           <BarcodeCanvas
             :ref="(el) => setItemRef(el, index)"
             :canvas-id="'batch_' + index"
             :value="item"
+            :format="format"
             :height="80"
+            :dark="isDark"
           />
         </view>
       </scroll-view>
@@ -41,7 +58,7 @@
 
     <GradientButton
       text="保存全部到相册"
-      :disabled="!items.length"
+      :disabled="!debouncedItems.length"
       :loading="saving"
       @click="handleSaveAll"
     />
@@ -53,12 +70,17 @@ import { ref, computed, watch } from "vue";
 import { onShow } from "@dcloudio/uni-app";
 import AppNavBar from "@/components/AppNavBar/AppNavBar.vue";
 import BarcodeCanvas from "@/components/BarcodeCanvas/BarcodeCanvas.vue";
+import FormatPicker from "@/components/FormatPicker/FormatPicker.vue";
+import EmptyState from "@/components/EmptyState/EmptyState.vue";
 import AdSlot from "@/components/AdSlot/AdSlot.vue";
 import GradientButton from "@/components/GradientButton/GradientButton.vue";
 import { splitBatchContent } from "@/utils/split.js";
 import { saveImageToAlbum, requestAlbumPermission } from "@/utils/canvas.js";
 import { addHistory } from "@/utils/history.js";
 import { updateTabBar } from "@/utils/tabbar.js";
+import { useTheme } from "@/composables/useTheme.js";
+
+const { isDark, toggleTheme, themeClass } = useTheme();
 
 const splitTabs = [
   { label: "换行", value: "newline" },
@@ -66,25 +88,37 @@ const splitTabs = [
   { label: "全部", value: "both" },
 ];
 
-const rawContent = ref("123456789012\nHELLO123\n998877");
+const format = ref("CODE128");
+const rawContent = ref("123456789012\n5901234123457\nHELLO123");
 const splitMode = ref("both");
 const saving = ref(false);
 const itemRefs = ref([]);
 
 const items = computed(() => splitBatchContent(rawContent.value, splitMode.value));
+const debouncedItems = ref(items.value);
+let batchTimer = null;
+
+watch(items, (val) => {
+  if (batchTimer) clearTimeout(batchTimer);
+  batchTimer = setTimeout(() => {
+    debouncedItems.value = val;
+    batchTimer = null;
+  }, 400);
+}, { immediate: true });
 
 function setItemRef(el, index) {
   if (el) itemRefs.value[index] = el;
 }
 
-watch(items, () => {
+watch(debouncedItems, () => {
   itemRefs.value = [];
 });
 
 onShow(updateTabBar);
 
 async function handleSaveAll() {
-  if (!items.value.length) return;
+  const list = debouncedItems.value;
+  if (!list.length) return;
 
   saving.value = true;
   try {
@@ -92,13 +126,13 @@ async function handleSaveAll() {
     if (!ok) return;
 
     let saved = 0;
-    for (let i = 0; i < items.value.length; i++) {
+    for (let i = 0; i < list.length; i++) {
       const comp = itemRefs.value[i];
       if (!comp?.exportImage) continue;
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 280));
       const path = await comp.exportImage();
       await saveImageToAlbum(path);
-      addHistory(items.value[i], { from: "batch" });
+      addHistory(list[i], { from: "batch", format: format.value });
       saved++;
     }
     uni.showToast({ title: `已保存 ${saved} 张`, icon: "success" });
@@ -114,6 +148,7 @@ async function handleSaveAll() {
 .page {
   min-height: 100vh;
   padding-bottom: calc(280rpx + env(safe-area-inset-bottom));
+  background: var(--bg-page);
 }
 
 .content {
@@ -130,6 +165,10 @@ async function handleSaveAll() {
   flex-shrink: 0;
 }
 
+.glass-card {
+  @include glass;
+}
+
 .split-tabs {
   display: flex;
   gap: 12rpx;
@@ -142,12 +181,13 @@ async function handleSaveAll() {
   padding: 14rpx 0;
   border-radius: 16rpx;
   font-size: 26rpx;
-  color: #8e8e93;
-  background: #f2f6fc;
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+  transition: all 0.25s ease;
 
   &.active {
-    background: #e8f2ff;
-    color: #007aff;
+    background: var(--primary-light);
+    color: var(--primary);
     font-weight: 600;
   }
 }
@@ -156,31 +196,23 @@ async function handleSaveAll() {
   width: 100%;
   min-height: 180rpx;
   font-size: 30rpx;
-  color: #1c1c1e;
-  line-height: 1.45;
+  color: var(--text-primary);
 }
 
 .placeholder {
-  color: #c7c7cc;
+  color: var(--text-placeholder);
 }
 
 .hint {
   display: block;
   margin-top: 12rpx;
   font-size: 24rpx;
-  color: #007aff;
+  color: var(--primary);
 }
 
 .list {
   flex: 1;
-  max-height: 52vh;
-}
-
-.empty {
-  text-align: center;
-  color: #8e8e93;
-  padding: 48rpx;
-  font-size: 28rpx;
+  max-height: 50vh;
 }
 
 .batch-item {

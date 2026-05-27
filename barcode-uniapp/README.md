@@ -1,6 +1,6 @@
 # 条形码生成器 · 微信小程序
 
-基于 **uni-app + Vue 3** 的 CODE128 条形码工具，iOS 极简蓝白风格，支持 iPhone / Android 微信端。
+基于 **uni-app + Vue 3 + [JsBarcode](https://github.com/lindell/JsBarcode)** 的 CODE128 条形码工具，使用 **canvas 2d** 渲染，iOS 极简蓝白中文界面，支持 iPhone / Android 微信端。
 
 ## 功能
 
@@ -71,14 +71,14 @@ barcode-uniapp/src/
 │   ├── batch/           # 批量生成
 │   └── history/         # 历史记录
 └── utils/
-    ├── code128.js       # CODE128 编码
-    ├── canvas.js        # 绘制与保存
+    ├── jsbarcode.js     # JsBarcode 适配（canvas 2d）
+    ├── canvas.js        # 相册保存与 canvas 工具
     ├── history.js       # 本地缓存
     └── split.js         # 批量分割
 ```
 
 ## 说明
 
-- 条形码仅支持 **ASCII 可打印字符**（CODE128-B）
+- 条形码由 **JsBarcode** 生成，格式 **CODE128**（建议英文、数字与常用符号）
 - 保存相册需用户授权 `scope.writePhotosAlbum`
 - 历史记录最多保留 100 条

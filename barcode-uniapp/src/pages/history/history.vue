@@ -1,15 +1,21 @@
 <template>
-  <view class="page">
-    <AppNavBar title="历史记录" :subtitle="`${list.length} 条记录`" />
+  <view class="page" :class="themeClass">
+    <AppNavBar
+      title="历史记录"
+      :subtitle="`${list.length} 条记录`"
+      :is-dark="isDark"
+      @toggle-theme="toggleTheme"
+    />
 
     <view class="content">
-      <view v-if="!list.length" class="empty-card">
-        <text class="empty-icon">◷</text>
-        <text class="empty-title">暂无历史记录</text>
-        <text class="empty-desc">保存条形码后会自动记录在这里</text>
-      </view>
+      <EmptyState
+        v-if="!list.length"
+        icon="◷"
+        title="暂无历史记录"
+        desc="保存码图后会自动记录在这里，点击可快速回填"
+      />
 
-      <view v-else class="list">
+      <view v-else class="list glass-card fade-in">
         <view
           v-for="item in list"
           :key="item.id"
@@ -19,7 +25,7 @@
         >
           <view class="item-main">
             <text class="item-text">{{ item.text }}</text>
-            <text class="item-time">{{ formatTime(item.time) }}</text>
+            <text class="item-meta">{{ formatLabel(item) }} · {{ formatTime(item.time) }}</text>
           </view>
           <text class="item-arrow">›</text>
         </view>
@@ -38,6 +44,7 @@
 import { ref } from "vue";
 import { onShow } from "@dcloudio/uni-app";
 import AppNavBar from "@/components/AppNavBar/AppNavBar.vue";
+import EmptyState from "@/components/EmptyState/EmptyState.vue";
 import AdSlot from "@/components/AdSlot/AdSlot.vue";
 import {
   getHistory,
@@ -46,8 +53,17 @@ import {
   formatTime,
 } from "@/utils/history.js";
 import { updateTabBar } from "@/utils/tabbar.js";
+import { useTheme } from "@/composables/useTheme.js";
 
+const { isDark, toggleTheme, themeClass } = useTheme();
 const list = ref([]);
+
+function formatLabel(item) {
+  const f = item.format || "CODE128";
+  if (f === "QRCODE") return "二维码";
+  if (f === "EAN13") return "EAN-13";
+  return "CODE128";
+}
 
 function loadList() {
   list.value = getHistory();
@@ -60,13 +76,14 @@ onShow(() => {
 
 function openItem(item) {
   uni.setStorageSync("pending_barcode_text", item.text);
+  if (item.format) uni.setStorageSync("pending_barcode_format", item.format);
   uni.switchTab({ url: "/pages/index/index" });
 }
 
 function confirmDelete(item) {
   uni.showModal({
     title: "删除记录",
-    content: `删除「${item.text}」？`,
+    content: `删除「${item.text.slice(0, 20)}」？`,
     success: (res) => {
       if (res.confirm) {
         list.value = removeHistory(item.id);
@@ -94,37 +111,11 @@ function handleClear() {
 .page {
   min-height: 100vh;
   padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  background: var(--bg-page);
 }
 
 .content {
   padding: 24rpx 32rpx;
-}
-
-.empty-card {
-  @include card;
-  padding: 80rpx 40rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.empty-icon {
-  font-size: 64rpx;
-  color: #c7c7cc;
-  margin-bottom: 24rpx;
-}
-
-.empty-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #1c1c1e;
-  margin-bottom: 12rpx;
-}
-
-.empty-desc {
-  font-size: 26rpx;
-  color: #8e8e93;
 }
 
 .list {
@@ -132,18 +123,23 @@ function handleClear() {
   overflow: hidden;
 }
 
+.glass-card {
+  @include glass;
+}
+
 .history-item {
   display: flex;
   align-items: center;
   padding: 28rpx 32rpx;
-  border-bottom: 1rpx solid #f2f2f7;
+  border-bottom: 1rpx solid var(--border);
+  transition: background 0.2s ease;
 
   &:last-child {
     border-bottom: none;
   }
 
   &:active {
-    background: #f9f9fb;
+    background: var(--bg-subtle);
   }
 }
 
@@ -156,22 +152,22 @@ function handleClear() {
   display: block;
   font-size: 30rpx;
   font-weight: 500;
-  color: #1c1c1e;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.item-time {
+.item-meta {
   display: block;
   font-size: 24rpx;
-  color: #8e8e93;
+  color: var(--text-secondary);
   margin-top: 8rpx;
 }
 
 .item-arrow {
   font-size: 40rpx;
-  color: #c7c7cc;
+  color: var(--text-placeholder);
   margin-left: 16rpx;
 }
 
@@ -180,11 +176,11 @@ function handleClear() {
 }
 
 .clear-btn {
-  background: #fff;
+  background: var(--bg-card);
   color: #ff3b30;
   font-size: 28rpx;
   border-radius: 24rpx;
-  border: none;
+  border: 1rpx solid var(--border);
 
   &::after {
     border: none;

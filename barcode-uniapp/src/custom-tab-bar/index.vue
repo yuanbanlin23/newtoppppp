@@ -1,5 +1,5 @@
 <template>
-  <view class="tab-bar">
+  <view class="tab-bar glass-tab" :class="themeClass">
     <view
       v-for="(item, index) in list"
       :key="item.pagePath"
@@ -17,7 +17,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+
+const themeClass = computed(() => {
+  const t = uni.getStorageSync("app_theme_v1") || "light";
+  return `theme-${t}`;
+});
 
 const list = [
   { pagePath: "/pages/index/index", text: "生成", icon: "▦" },
@@ -59,9 +64,13 @@ export default {
   bottom: 0;
   z-index: 99;
   display: flex;
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg, rgba(255, 255, 255, 0.96));
+  border-top: 1rpx solid var(--border, #e5e5ea);
+}
+
+.glass-tab {
   backdrop-filter: blur(20px);
-  border-top: 1rpx solid #e5e5ea;
+  -webkit-backdrop-filter: blur(20px);
   padding-top: 8rpx;
   box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.04);
 }
