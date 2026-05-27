@@ -1,0 +1,53 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "条形码生成"
+      }
+    },
+    {
+      "path": "pages/batch/batch",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "批量生成"
+      }
+    },
+    {
+      "path": "pages/history/history",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "历史记录"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "条形码生成器",
+    "navigationBarBackgroundColor": "#007AFF",
+    "backgroundColor": "#F2F6FC",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8E8E93",
+    "selectedColor": "#007AFF",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "生成"
+      },
+      {
+        "pagePath": "pages/batch/batch",
+        "text": "批量"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史"
+      }
+    ]
+  }
+}

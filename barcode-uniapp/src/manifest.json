@@ -1,0 +1,36 @@
+{
+  "name": "条形码生成器",
+  "appid": "__UNI__BARCODE001",
+  "description": "Code128 条形码生成工具",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true,
+    "splashscreen": {
+      "alwaysShowBeforeRender": true,
+      "waiting": true,
+      "autoclose": true,
+      "delay": 0
+    }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "permission": {
+      "scope.writePhotosAlbum": {
+        "desc": "保存条形码图片到相册"
+      }
+    },
+    "requiredPrivateInfos": []
+  },
+  "vueVersion": "3",
+  "uniStatistics": {
+    "enable": false
+  }
+}

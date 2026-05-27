@@ -1,0 +1,25 @@
+$primary: #007aff;
+$primary-dark: #0051d5;
+$primary-light: #e8f2ff;
+$bg-page: #f2f6fc;
+$bg-card: #ffffff;
+$text-primary: #1c1c1e;
+$text-secondary: #8e8e93;
+$text-placeholder: #c7c7cc;
+$border: #e5e5ea;
+$radius-lg: 24rpx;
+$radius-xl: 32rpx;
+$shadow-card: 0 8rpx 40rpx rgba(0, 122, 255, 0.08);
+$safe-bottom: env(safe-area-inset-bottom);
+
+@mixin card {
+  background: $bg-card;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-card;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
