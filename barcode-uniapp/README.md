@@ -1,0 +1,84 @@
+# 条形码生成器 · 微信小程序
+
+基于 **uni-app + Vue 3** 的 CODE128 条形码工具，iOS 极简蓝白风格，支持 iPhone / Android 微信端。
+
+## 功能
+
+- 实时生成 CODE128 条形码
+- 保存图片到相册
+- 批量生成（换行 / 空格 / 全部三种分割）
+- 本地历史记录（`uni.storage`）
+- 自定义 TabBar（生成 / 批量 / 历史）
+- 广告位预留（`components/AdSlot`）
+
+## 环境要求
+
+- Node.js 18+
+- [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
+- 微信小程序 AppID（测试可用测试号）
+
+## 快速开始
+
+### 方式一：命令行（推荐）
+
+```bash
+cd barcode-uniapp
+npm install
+npm run dev:mp-weixin
+```
+
+用微信开发者工具导入目录：`barcode-uniapp/dist/dev/mp-weixin`（开发）或 `dist/build/mp-weixin`（构建）
+
+### 方式二：HBuilderX
+
+1. 用 HBuilderX 打开 `barcode-uniapp` 目录  
+2. 运行 → 运行到小程序模拟器 → 微信开发者工具  
+
+## 配置 AppID
+
+编辑 `manifest.json` → `mp-weixin` → `appid`，填入你的小程序 AppID。
+
+## 发布
+
+```bash
+npm run build:mp-weixin
+```
+
+上传 `dist/build/mp-weixin` 到微信公众平台。
+
+## 接入广告
+
+编辑 `components/AdSlot/AdSlot.vue`，将占位区域替换为：
+
+```html
+<ad unit-id="你的广告单元ID" ad-type="banner" />
+```
+
+并在微信公众平台开通流量主。
+
+## 项目结构
+
+```
+barcode-uniapp/src/
+├── components/
+│   ├── AppNavBar/       # 顶部蓝色导航
+│   ├── BarcodeCanvas/   # 条形码 canvas 绘制
+│   ├── GradientButton/  # 底部渐变按钮
+│   └── AdSlot/          # 广告位
+├── custom-tab-bar/      # 自定义底部 Tab
+├── pages/
+│   ├── index/           # 单个生成
+│   ├── batch/           # 批量生成
+│   └── history/         # 历史记录
+└── utils/
+    ├── code128.js       # CODE128 编码
+    ├── canvas.js        # 绘制与保存
+    ├── history.js       # 本地缓存
+    └── split.js         # 批量分割
+```
+
+## 说明
+
+- 条形码仅支持 **ASCII 可打印字符**（CODE128-B）
+- 保存相册需用户授权 `scope.writePhotosAlbum`
+- 历史记录最多保留 100 条
