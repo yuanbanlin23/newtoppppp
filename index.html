@@ -14,16 +14,11 @@
             --text-muted: #8b9cb3;
             --accent: #3b82f6;
             --accent-hover: #2563eb;
-            --success: #22c55e;
             --error: #ef4444;
             --radius: 12px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -46,38 +41,19 @@
         .container {
             position: relative;
             z-index: 1;
-            max-width: 960px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 2rem 1.25rem 3rem;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
+        header { text-align: center; margin-bottom: 2rem; }
+        header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+        header p { color: var(--text-muted); font-size: 0.95rem; }
 
-        header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
-        }
+        .layout { display: grid; gap: 1.5rem; }
 
-        header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .layout {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .layout {
-                grid-template-columns: 1fr 1fr;
-                align-items: start;
-            }
+        @media (min-width: 900px) {
+            .layout { grid-template-columns: 1fr 1.1fr; align-items: start; }
         }
 
         .panel {
@@ -104,12 +80,12 @@
             color: var(--text-muted);
         }
 
-        .field {
-            margin-bottom: 1rem;
-        }
+        .field { margin-bottom: 1rem; }
 
         input[type="text"],
-        select {
+        input[type="color"],
+        select,
+        textarea {
             width: 100%;
             padding: 0.65rem 0.85rem;
             background: var(--bg);
@@ -117,39 +93,60 @@
             border-radius: 8px;
             color: var(--text);
             font-size: 1rem;
-            transition: border-color 0.15s, box-shadow 0.15s;
+            font-family: inherit;
         }
 
-        input[type="text"]:focus,
-        select:focus {
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.45;
+        }
+
+        input[type="color"] {
+            height: 42px;
+            padding: 4px;
+            cursor: pointer;
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-        .range-wrap {
+        .mode-tabs {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
         }
 
-        input[type="range"] {
+        .mode-tab {
             flex: 1;
-            accent-color: var(--accent);
+            padding: 0.55rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
         }
 
+        .mode-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+        .range-wrap { display: flex; align-items: center; gap: 0.75rem; }
+        input[type="range"] { flex: 1; accent-color: var(--accent); }
         .range-value {
             min-width: 2.5rem;
             text-align: right;
             font-size: 0.875rem;
             color: var(--text-muted);
-            font-variant-numeric: tabular-nums;
         }
 
         .checkbox-field {
@@ -159,118 +156,138 @@
             margin-bottom: 0.75rem;
         }
 
-        .checkbox-field input {
-            width: 1rem;
-            height: 1rem;
-            accent-color: var(--accent);
-        }
+        .checkbox-field input { width: 1rem; height: 1rem; accent-color: var(--accent); }
+        .checkbox-field label { margin: 0; color: var(--text); cursor: pointer; }
 
-        .checkbox-field label {
-            margin: 0;
-            color: var(--text);
-            cursor: pointer;
-        }
+        .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; }
+        .hint.error { color: var(--error); }
 
-        .hint {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.35rem;
-        }
-
-        .hint.error {
-            color: var(--error);
-        }
-
-        .preview-panel {
+        .file-row {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             align-items: center;
         }
 
+        .file-row input[type="file"] { font-size: 0.8rem; color: var(--text-muted); max-width: 100%; }
+
+        .preview-panel { display: flex; flex-direction: column; }
+
         .preview-box {
             width: 100%;
-            min-height: 200px;
-            background: #fff;
+            min-height: 220px;
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 1rem;
             margin-bottom: 1.25rem;
             overflow: auto;
         }
 
-        .preview-box svg {
-            max-width: 100%;
-            height: auto;
-        }
-
         .preview-placeholder {
-            color: #94a3b8;
+            color: var(--text-muted);
             font-size: 0.9rem;
             text-align: center;
+            padding: 1rem;
         }
 
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
+        .export-frame {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .export-frame .bg-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .export-frame .label-top,
+        .export-frame .label-bottom,
+        .export-frame .barcode-wrap {
+            position: relative;
+            z-index: 1;
+        }
+
+        .export-frame .label-top,
+        .export-frame .label-bottom {
+            font-weight: 600;
+            text-align: center;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        .export-frame .label-top { margin-bottom: 0.5rem; }
+        .export-frame .label-bottom { margin-top: 0.5rem; }
+
+        .export-frame .barcode-wrap svg { max-width: 100%; height: auto; display: block; }
+
+        .batch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
             width: 100%;
         }
 
+        .batch-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .batch-item .batch-caption {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .batch-item .export-frame { padding: 0.75rem; font-size: 0.85rem; }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; width: 100%; }
+
         button {
             flex: 1;
-            min-width: 120px;
+            min-width: 110px;
             padding: 0.65rem 1rem;
             border: none;
             border-radius: 8px;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-        }
-
+        button:active { transform: scale(0.98); }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); }
         .btn-secondary {
             background: var(--surface-hover);
             color: var(--text);
             border: 1px solid var(--border);
         }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        button:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none;
-        }
+        button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
         .format-examples {
-            margin-top: 1.25rem;
+            margin-top: 1rem;
             padding-top: 1rem;
             border-top: 1px solid var(--border);
         }
 
-        .format-examples h3 {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
+        .format-examples h3 { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
         .format-examples code {
             display: block;
             font-size: 0.8rem;
@@ -279,14 +296,12 @@
             padding: 0.5rem 0.65rem;
             border-radius: 6px;
             word-break: break-all;
+            cursor: pointer;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+        .hidden { display: none !important; }
+
+        footer { text-align: center; margin-top: 2rem; font-size: 0.8rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -294,19 +309,31 @@
     <div class="container">
         <header>
             <h1>条形码生成器</h1>
-            <p>输入内容，选择格式，即时预览并下载 PNG / SVG</p>
+            <p>支持批量生成、自定义文字与背景图，可下载 PNG / ZIP</p>
         </header>
 
         <div class="layout">
             <section class="panel">
                 <h2>设置</h2>
 
-                <div class="field">
-                    <label for="content">条形码内容</label>
-                    <input type="text" id="content" placeholder="例如：123456789012" value="123456789012" autocomplete="off">
-                    <p class="hint" id="formatHint">CODE128：支持字母与数字</p>
-                    <p class="hint error" id="errorHint" hidden></p>
+                <div class="mode-tabs">
+                    <button type="button" class="mode-tab active" data-mode="single">单个生成</button>
+                    <button type="button" class="mode-tab" data-mode="batch">批量生成</button>
                 </div>
+
+                <div id="singleContentField" class="field">
+                    <label for="content">条形码内容</label>
+                    <input type="text" id="content" value="123456789012" autocomplete="off">
+                </div>
+
+                <div id="batchContentField" class="field hidden">
+                    <label for="batchContent">批量内容（每行一个）</label>
+                    <textarea id="batchContent" placeholder="123456789012&#10;5901234123457&#10;HELLO123"></textarea>
+                    <p class="hint">空行会自动忽略</p>
+                </div>
+
+                <p class="hint" id="formatHint">CODE128：支持字母与数字</p>
+                <p class="hint error" id="errorHint" hidden></p>
 
                 <div class="field">
                     <label for="format">条形码格式</label>
@@ -315,15 +342,25 @@
                         <option value="CODE128A">CODE128A</option>
                         <option value="CODE128B">CODE128B</option>
                         <option value="CODE128C">CODE128C（纯数字偶数位）</option>
-                        <option value="EAN13">EAN-13（13 位商品码）</option>
-                        <option value="EAN8">EAN-8（8 位）</option>
-                        <option value="UPC">UPC-A（12 位）</option>
+                        <option value="EAN13">EAN-13</option>
+                        <option value="EAN8">EAN-8</option>
+                        <option value="UPC">UPC-A</option>
                         <option value="CODE39">CODE39</option>
-                        <option value="ITF14">ITF-14（14 位）</option>
+                        <option value="ITF14">ITF-14</option>
                         <option value="MSI">MSI</option>
                         <option value="pharmacode">Pharmacode</option>
                         <option value="codabar">Codabar</option>
                     </select>
+                </div>
+
+                <div class="field">
+                    <label for="topText">上方自定义文字</label>
+                    <input type="text" id="topText" placeholder="例如：商品名称（可选）">
+                </div>
+
+                <div class="field">
+                    <label for="bottomText">下方自定义文字</label>
+                    <input type="text" id="bottomText" placeholder="留空则显示条形码编码（可关闭下方编码）">
                 </div>
 
                 <div class="row">
@@ -345,81 +382,113 @@
 
                 <div class="checkbox-field">
                     <input type="checkbox" id="displayValue" checked>
-                    <label for="displayValue">显示下方文字</label>
+                    <label for="displayValue">条形码下方显示编码</label>
+                </div>
+
+                <div class="field">
+                    <label for="textColor">文字颜色</label>
+                    <input type="color" id="textColor" value="#000000">
+                </div>
+
+                <div class="field">
+                    <label for="bgColor">背景颜色</label>
+                    <input type="color" id="bgColor" value="#ffffff">
+                </div>
+
+                <div class="field">
+                    <label>背景图片（可选，覆盖在背景色之上）</label>
+                    <div class="file-row">
+                        <input type="file" id="bgImage" accept="image/*">
+                        <button type="button" class="btn-secondary hidden" id="clearBgImage" style="flex:0;min-width:auto;padding:0.5rem 0.75rem;">清除图片</button>
+                    </div>
+                    <p class="hint">支持 JPG、PNG 等，导出 PNG 时会合成背景</p>
                 </div>
 
                 <div class="format-examples">
-                    <h3>当前格式示例</h3>
+                    <h3>当前格式示例（点击填入）</h3>
                     <code id="exampleCode">123456789012</code>
                 </div>
             </section>
 
             <section class="panel preview-panel">
-                <h2>预览</h2>
+                <h2 id="previewTitle">预览</h2>
                 <div class="preview-box" id="previewBox">
                     <p class="preview-placeholder" id="placeholder">正在生成…</p>
-                    <svg id="barcode"></svg>
+                    <div id="singlePreview"></div>
+                    <div id="batchPreview" class="batch-grid hidden"></div>
                 </div>
-                <div class="actions">
+                <div class="actions" id="singleActions">
                     <button type="button" class="btn-primary" id="downloadPng" disabled>下载 PNG</button>
                     <button type="button" class="btn-secondary" id="downloadSvg" disabled>下载 SVG</button>
+                </div>
+                <div class="actions hidden" id="batchActions">
+                    <button type="button" class="btn-primary" id="downloadZip" disabled>下载全部 ZIP</button>
                 </div>
             </section>
         </div>
 
-        <footer>本地运行，无需上传数据 · 基于 JsBarcode</footer>
+        <footer>数据仅在浏览器本地处理 · 基于 JsBarcode</footer>
     </div>
 
     <script type="module">
         import JsBarcode from "jsbarcode";
+        import JSZip from "jszip";
 
         const FORMAT_HINTS = {
             CODE128: { hint: "CODE128：支持字母与数字", example: "HELLO123" },
             CODE128A: { hint: "CODE128A：大写字母、数字与控制符", example: "ABC123" },
             CODE128B: { hint: "CODE128B：大小写字母与数字", example: "Hello123" },
             CODE128C: { hint: "CODE128C：纯数字，且位数为偶数", example: "12345678" },
-            EAN13: { hint: "EAN-13：恰好 12 或 13 位数字（可自动校验位）", example: "5901234123457" },
+            EAN13: { hint: "EAN-13：恰好 12 或 13 位数字", example: "5901234123457" },
             EAN8: { hint: "EAN-8：7 或 8 位数字", example: "96385074" },
             UPC: { hint: "UPC-A：11 或 12 位数字", example: "036000291452" },
             CODE39: { hint: "CODE39：大写字母、数字与 - . $ / + % 空格", example: "CODE39" },
             ITF14: { hint: "ITF-14：13 或 14 位数字", example: "12345678901231" },
             MSI: { hint: "MSI：纯数字", example: "123456" },
             pharmacode: { hint: "Pharmacode：3～131070 的整数", example: "12345" },
-            codabar: { hint: "Codabar：以 A/B/C/D 开头结尾，中间为数字等", example: "A40156B" },
+            codabar: { hint: "Codabar：以 A/B/C/D 开头结尾", example: "A40156B" },
         };
 
+        let mode = "single";
+        let bgImageUrl = null;
+        let singleValid = false;
+        let batchFrames = [];
+
         const contentEl = document.getElementById("content");
+        const batchContentEl = document.getElementById("batchContent");
         const formatEl = document.getElementById("format");
+        const topTextEl = document.getElementById("topText");
+        const bottomTextEl = document.getElementById("bottomText");
         const barWidthEl = document.getElementById("barWidth");
         const barHeightEl = document.getElementById("barHeight");
         const displayValueEl = document.getElementById("displayValue");
-        const barcodeEl = document.getElementById("barcode");
+        const textColorEl = document.getElementById("textColor");
+        const bgColorEl = document.getElementById("bgColor");
+        const bgImageEl = document.getElementById("bgImage");
+        const clearBgImageBtn = document.getElementById("clearBgImage");
+        const singlePreviewEl = document.getElementById("singlePreview");
+        const batchPreviewEl = document.getElementById("batchPreview");
         const placeholderEl = document.getElementById("placeholder");
         const errorHintEl = document.getElementById("errorHint");
         const formatHintEl = document.getElementById("formatHint");
         const exampleCodeEl = document.getElementById("exampleCode");
         const downloadPngBtn = document.getElementById("downloadPng");
         const downloadSvgBtn = document.getElementById("downloadSvg");
-        const barWidthValEl = document.getElementById("barWidthVal");
-        const barHeightValEl = document.getElementById("barHeightVal");
+        const downloadZipBtn = document.getElementById("downloadZip");
+        const singleActionsEl = document.getElementById("singleActions");
+        const batchActionsEl = document.getElementById("batchActions");
+        const singleContentField = document.getElementById("singleContentField");
+        const batchContentField = document.getElementById("batchContentField");
 
-        let lastValid = false;
-
-        function updateFormatUI() {
-            const format = formatEl.value;
-            const meta = FORMAT_HINTS[format] || FORMAT_HINTS.CODE128;
-            formatHintEl.textContent = meta.hint;
-            exampleCodeEl.textContent = meta.example;
-        }
-
-        function getOptions() {
+        function getBarcodeOptions() {
+            const hasBgImage = Boolean(bgImageUrl);
             return {
                 format: formatEl.value,
                 width: parseFloat(barWidthEl.value),
                 height: parseInt(barHeightEl.value, 10),
-                displayValue: displayValueEl.checked,
-                margin: 12,
-                background: "#ffffff",
+                displayValue: displayValueEl.checked && !bottomTextEl.value.trim(),
+                margin: 10,
+                background: hasBgImage ? "transparent" : bgColorEl.value,
                 lineColor: "#000000",
                 fontOptions: "bold",
                 fontSize: 14,
@@ -427,14 +496,64 @@
             };
         }
 
-        function renderBarcode() {
-            const value = contentEl.value.trim();
+        function tryCreateFrame(value) {
+            const frame = document.createElement("div");
+            frame.className = "export-frame";
+            frame.style.backgroundColor = bgColorEl.value;
+            if (bgImageUrl) {
+                const img = document.createElement("img");
+                img.className = "bg-image";
+                img.src = bgImageUrl;
+                img.alt = "";
+                frame.appendChild(img);
+            }
+            const top = topTextEl.value.trim();
+            if (top) {
+                const topEl = document.createElement("div");
+                topEl.className = "label-top";
+                topEl.textContent = top;
+                topEl.style.color = textColorEl.value;
+                topEl.style.fontSize = "16px";
+                frame.appendChild(topEl);
+            }
+            const wrap = document.createElement("div");
+            wrap.className = "barcode-wrap";
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            wrap.appendChild(svg);
+            frame.appendChild(wrap);
+            const bottomCustom = bottomTextEl.value.trim();
+            if (bottomCustom) {
+                const bottomEl = document.createElement("div");
+                bottomEl.className = "label-bottom";
+                bottomEl.textContent = bottomCustom;
+                bottomEl.style.color = textColorEl.value;
+                bottomEl.style.fontSize = "14px";
+                frame.appendChild(bottomEl);
+            }
+            JsBarcode(svg, value, getBarcodeOptions());
+            return frame;
+        }
+
+        function updateFormatUI() {
+            const meta = FORMAT_HINTS[formatEl.value] || FORMAT_HINTS.CODE128;
+            formatHintEl.textContent = meta.hint;
+            exampleCodeEl.textContent = meta.example;
+        }
+
+        function getLines() {
+            return batchContentEl.value
+                .split(/\r?\n/)
+                .map((l) => l.trim())
+                .filter(Boolean);
+        }
+
+        function renderSingle() {
             errorHintEl.hidden = true;
-            errorHintEl.textContent = "";
+            singlePreviewEl.innerHTML = "";
+            const value = contentEl.value.trim();
 
             if (!value) {
-                lastValid = false;
-                barcodeEl.innerHTML = "";
+                singleValid = false;
                 placeholderEl.hidden = false;
                 placeholderEl.textContent = "请输入条形码内容";
                 downloadPngBtn.disabled = true;
@@ -443,14 +562,14 @@
             }
 
             try {
-                JsBarcode(barcodeEl, value, getOptions());
-                lastValid = true;
+                const frame = tryCreateFrame(value);
+                singlePreviewEl.appendChild(frame);
+                singleValid = true;
                 placeholderEl.hidden = true;
                 downloadPngBtn.disabled = false;
                 downloadSvgBtn.disabled = false;
             } catch (err) {
-                lastValid = false;
-                barcodeEl.innerHTML = "";
+                singleValid = false;
                 placeholderEl.hidden = false;
                 placeholderEl.textContent = "无法生成，请检查内容与格式";
                 errorHintEl.hidden = false;
@@ -460,44 +579,147 @@
             }
         }
 
-        function svgToPng(svg, scale = 2) {
+        function renderBatch() {
+            errorHintEl.hidden = true;
+            batchPreviewEl.innerHTML = "";
+            batchFrames = [];
+
+            const lines = getLines();
+            if (lines.length === 0) {
+                placeholderEl.hidden = false;
+                placeholderEl.textContent = "请输入批量内容，每行一个条形码";
+                downloadZipBtn.disabled = true;
+                return;
+            }
+
+            let ok = 0;
+            const errors = [];
+
+            lines.forEach((line, i) => {
+                try {
+                    const frame = tryCreateFrame(line);
+                    const item = document.createElement("div");
+                    item.className = "batch-item";
+                    item.appendChild(frame);
+                    const cap = document.createElement("div");
+                    cap.className = "batch-caption";
+                    cap.textContent = line;
+                    item.appendChild(cap);
+                    batchPreviewEl.appendChild(item);
+                    batchFrames.push({ frame, name: line });
+                    ok++;
+                } catch (err) {
+                    errors.push(`第 ${i + 1} 行：${err.message || "无效"}`);
+                }
+            });
+
+            placeholderEl.hidden = ok > 0;
+            if (ok === 0) {
+                placeholderEl.textContent = "没有成功生成的条形码";
+            } else if (errors.length) {
+                errorHintEl.hidden = false;
+                errorHintEl.textContent = errors.slice(0, 3).join("；") + (errors.length > 3 ? "…" : "");
+            }
+
+            downloadZipBtn.disabled = ok === 0;
+        }
+
+        function render() {
+            if (mode === "single") {
+                batchPreviewEl.classList.add("hidden");
+                singlePreviewEl.classList.remove("hidden");
+                renderSingle();
+            } else {
+                singlePreviewEl.classList.add("hidden");
+                batchPreviewEl.classList.remove("hidden");
+                renderBatch();
+            }
+        }
+
+        function setMode(next) {
+            mode = next;
+            document.querySelectorAll(".mode-tab").forEach((tab) => {
+                tab.classList.toggle("active", tab.dataset.mode === mode);
+            });
+            singleContentField.classList.toggle("hidden", mode !== "single");
+            batchContentField.classList.toggle("hidden", mode !== "batch");
+            singleActionsEl.classList.toggle("hidden", mode !== "single");
+            batchActionsEl.classList.toggle("hidden", mode !== "batch");
+            document.getElementById("previewTitle").textContent =
+                mode === "single" ? "预览" : `批量预览（${getLines().length || 0} 条）`;
+            render();
+        }
+
+        function drawSvgOnCanvas(ctx, svg, x, y, w, h) {
             return new Promise((resolve, reject) => {
-                const clone = svg.cloneNode(true);
                 const bbox = svg.getBBox();
-                const width = bbox.width + bbox.x * 2 || svg.clientWidth || 300;
-                const height = bbox.height + bbox.y * 2 || svg.clientHeight || 120;
-
-                clone.setAttribute("width", width);
-                clone.setAttribute("height", height);
-                clone.setAttribute("viewBox", `0 0 ${width} ${height}`);
-
-                const svgData = new XMLSerializer().serializeToString(clone);
-                const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-                const url = URL.createObjectURL(blob);
+                const sw = bbox.width || w;
+                const sh = bbox.height || h;
+                const clone = svg.cloneNode(true);
+                clone.setAttribute("width", sw);
+                clone.setAttribute("height", sh);
+                const url = URL.createObjectURL(
+                    new Blob(
+                        [new XMLSerializer().serializeToString(clone)],
+                        { type: "image/svg+xml;charset=utf-8" }
+                    )
+                );
                 const img = new Image();
-
                 img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = width * scale;
-                    canvas.height = height * scale;
-                    const ctx = canvas.getContext("2d");
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.scale(scale, scale);
-                    ctx.drawImage(img, 0, 0);
+                    ctx.drawImage(img, x, y, sw, sh);
                     URL.revokeObjectURL(url);
-                    canvas.toBlob((pngBlob) => {
-                        if (pngBlob) resolve(pngBlob);
-                        else reject(new Error("PNG 导出失败"));
-                    }, "image/png");
+                    resolve();
                 };
-
                 img.onerror = () => {
                     URL.revokeObjectURL(url);
-                    reject(new Error("图片转换失败"));
+                    reject(new Error("SVG 渲染失败"));
                 };
-
                 img.src = url;
+            });
+        }
+
+        async function frameToPng(frame, scale = 2) {
+            await document.fonts.ready;
+            const root = frame.getBoundingClientRect();
+            const w = Math.ceil(root.width) || 300;
+            const h = Math.ceil(root.height) || 150;
+            const canvas = document.createElement("canvas");
+            canvas.width = w * scale;
+            canvas.height = h * scale;
+            const ctx = canvas.getContext("2d");
+            ctx.scale(scale, scale);
+            ctx.fillStyle = bgColorEl.value;
+            ctx.fillRect(0, 0, w, h);
+
+            for (const child of frame.children) {
+                const r = child.getBoundingClientRect();
+                const x = r.left - root.left;
+                const y = r.top - root.top;
+
+                if (child.classList.contains("bg-image") && child.complete) {
+                    ctx.drawImage(child, x, y, r.width, r.height);
+                } else if (
+                    child.classList.contains("label-top") ||
+                    child.classList.contains("label-bottom")
+                ) {
+                    ctx.fillStyle = textColorEl.value;
+                    ctx.font = child.classList.contains("label-top")
+                        ? "bold 16px sans-serif"
+                        : "14px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(child.textContent, x + r.width / 2, y + r.height / 2);
+                } else if (child.classList.contains("barcode-wrap")) {
+                    const svg = child.querySelector("svg");
+                    if (svg) await drawSvgOnCanvas(ctx, svg, x, y, r.width, r.height);
+                }
+            }
+
+            return new Promise((resolve, reject) => {
+                canvas.toBlob((blob) => {
+                    if (blob) resolve(blob);
+                    else reject(new Error("PNG 导出失败"));
+                }, "image/png");
             });
         }
 
@@ -509,54 +731,117 @@
             URL.revokeObjectURL(a.href);
         }
 
+        function safeName(str) {
+            return str.replace(/[^\w\u4e00-\u9fa5-]+/g, "_").slice(0, 40) || "barcode";
+        }
+
         async function downloadPng() {
-            if (!lastValid) return;
+            const frame = singlePreviewEl.querySelector(".export-frame");
+            if (!frame || !singleValid) return;
             try {
-                const blob = await svgToPng(barcodeEl);
-                const safeName = contentEl.value.trim().replace(/[^\w\u4e00-\u9fa5-]+/g, "_").slice(0, 40) || "barcode";
-                downloadFile(blob, `${safeName}.png`);
+                const blob = await frameToPng(frame);
+                downloadFile(blob, `${safeName(contentEl.value.trim())}.png`);
             } catch (err) {
                 alert("PNG 下载失败：" + (err.message || "未知错误"));
             }
         }
 
         function downloadSvg() {
-            if (!lastValid) return;
-            const clone = barcodeEl.cloneNode(true);
-            const svgData = '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(clone);
-            const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-            const safeName = contentEl.value.trim().replace(/[^\w\u4e00-\u9fa5-]+/g, "_").slice(0, 40) || "barcode";
-            downloadFile(blob, `${safeName}.svg`);
+            const frame = singlePreviewEl.querySelector(".export-frame");
+            const svg = frame?.querySelector("svg");
+            if (!svg || !singleValid) return;
+            const svgData =
+                '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                new XMLSerializer().serializeToString(svg.cloneNode(true));
+            downloadFile(
+                new Blob([svgData], { type: "image/svg+xml;charset=utf-8" }),
+                `${safeName(contentEl.value.trim())}.svg`
+            );
+        }
+
+        async function downloadZip() {
+            if (!batchFrames.length) return;
+            downloadZipBtn.disabled = true;
+            downloadZipBtn.textContent = "打包中…";
+            try {
+                const zip = new JSZip();
+                for (let i = 0; i < batchFrames.length; i++) {
+                    const { frame, name } = batchFrames[i];
+                    const blob = await frameToPng(frame);
+                    zip.file(`${String(i + 1).padStart(3, "0")}_${safeName(name)}.png`, blob);
+                }
+                const zipBlob = await zip.generateAsync({ type: "blob" });
+                downloadFile(zipBlob, "barcodes.zip");
+            } catch (err) {
+                alert("ZIP 打包失败：" + (err.message || "未知错误"));
+            } finally {
+                downloadZipBtn.disabled = batchFrames.length === 0;
+                downloadZipBtn.textContent = "下载全部 ZIP";
+            }
         }
 
         function applyExample() {
             const meta = FORMAT_HINTS[formatEl.value];
-            if (meta) contentEl.value = meta.example;
-            renderBarcode();
+            if (!meta) return;
+            if (mode === "single") contentEl.value = meta.example;
+            else batchContentEl.value = [meta.example, "123456789012", "HELLO123"].join("\n");
+            render();
         }
 
-        contentEl.addEventListener("input", renderBarcode);
+        document.querySelectorAll(".mode-tab").forEach((tab) => {
+            tab.addEventListener("click", () => setMode(tab.dataset.mode));
+        });
+
+        bgImageEl.addEventListener("change", () => {
+            const file = bgImageEl.files?.[0];
+            if (!file) return;
+            if (bgImageUrl) URL.revokeObjectURL(bgImageUrl);
+            bgImageUrl = URL.createObjectURL(file);
+            clearBgImageBtn.classList.remove("hidden");
+            render();
+        });
+
+        clearBgImageBtn.addEventListener("click", () => {
+            if (bgImageUrl) URL.revokeObjectURL(bgImageUrl);
+            bgImageUrl = null;
+            bgImageEl.value = "";
+            clearBgImageBtn.classList.add("hidden");
+            render();
+        });
+
+        [
+            contentEl,
+            batchContentEl,
+            topTextEl,
+            bottomTextEl,
+            formatEl,
+            displayValueEl,
+            textColorEl,
+            bgColorEl,
+        ].forEach((el) => el.addEventListener("input", render));
         formatEl.addEventListener("change", () => {
             updateFormatUI();
-            renderBarcode();
+            render();
         });
+        displayValueEl.addEventListener("change", render);
+
         barWidthEl.addEventListener("input", () => {
-            barWidthValEl.textContent = barWidthEl.value;
-            renderBarcode();
+            document.getElementById("barWidthVal").textContent = barWidthEl.value;
+            render();
         });
         barHeightEl.addEventListener("input", () => {
-            barHeightValEl.textContent = barHeightEl.value;
-            renderBarcode();
+            document.getElementById("barHeightVal").textContent = barHeightEl.value;
+            render();
         });
-        displayValueEl.addEventListener("change", renderBarcode);
+
         downloadPngBtn.addEventListener("click", downloadPng);
         downloadSvgBtn.addEventListener("click", downloadSvg);
+        downloadZipBtn.addEventListener("click", downloadZip);
         exampleCodeEl.addEventListener("click", applyExample);
-        exampleCodeEl.style.cursor = "pointer";
         exampleCodeEl.title = "点击填入示例";
 
         updateFormatUI();
-        renderBarcode();
+        setMode("single");
     </script>
 </body>
 </html>
