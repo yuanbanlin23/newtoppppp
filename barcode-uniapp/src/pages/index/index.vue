@@ -1,4 +1,5 @@
 <template>
+  <PrivacyModal v-if="showPrivacyModal" @agreed="onPrivacyAgreed" />
   <view class="page" :class="themeClass">
     <AppNavBar
       title="条形码生成"
@@ -31,6 +32,12 @@
       />
 
       <AdSlot />
+
+      <view class="legal-links">
+        <text class="legal-link" @tap="openAgreement">用户协议</text>
+        <text class="legal-dot">·</text>
+        <text class="legal-link" @tap="openPrivacy">隐私政策</text>
+      </view>
     </view>
 
     <GradientButton
@@ -56,8 +63,11 @@ import { addHistory } from "@/utils/history.js";
 import { updateTabBar } from "@/utils/tabbar.js";
 import { useDebouncedRef } from "@/composables/useDebounce.js";
 import { useTheme } from "@/composables/useTheme.js";
+import { usePrivacyGate } from "@/composables/usePrivacyGate.js";
+import PrivacyModal from "@/components/PrivacyModal/PrivacyModal.vue";
 
 const { isDark, toggleTheme, themeClass } = useTheme();
+const { showPrivacyModal, onPrivacyAgreed } = usePrivacyGate();
 
 const format = ref("CODE128");
 const content = ref("123456789012");
@@ -108,6 +118,14 @@ onShow(() => {
     uni.removeStorageSync("pending_barcode_format");
   }
 });
+
+function openAgreement() {
+  uni.navigateTo({ url: "/pages/legal/agreement" });
+}
+
+function openPrivacy() {
+  uni.navigateTo({ url: "/pages/legal/privacy" });
+}
 
 async function handleSave() {
   const text = content.value.trim();
@@ -181,5 +199,24 @@ async function handleSave() {
   font-size: 22rpx;
   color: var(--text-placeholder);
   margin-top: 12rpx;
+}
+
+.legal-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  margin-top: 24rpx;
+  padding-bottom: 8rpx;
+}
+
+.legal-link {
+  font-size: 24rpx;
+  color: var(--text-secondary, #8e8e93);
+}
+
+.legal-dot {
+  font-size: 24rpx;
+  color: var(--text-placeholder, #c7c7cc);
 }
 </style>

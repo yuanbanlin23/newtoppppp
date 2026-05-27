@@ -1,4 +1,5 @@
 <template>
+  <PrivacyModal v-if="showPrivacyModal" @agreed="onPrivacyAgreed" />
   <view class="page" :class="themeClass">
     <AppNavBar
       title="批量生成"
@@ -79,8 +80,11 @@ import { saveImageToAlbum, requestAlbumPermission } from "@/utils/canvas.js";
 import { addHistory } from "@/utils/history.js";
 import { updateTabBar } from "@/utils/tabbar.js";
 import { useTheme } from "@/composables/useTheme.js";
+import { usePrivacyGate } from "@/composables/usePrivacyGate.js";
+import PrivacyModal from "@/components/PrivacyModal/PrivacyModal.vue";
 
 const { isDark, toggleTheme, themeClass } = useTheme();
+const { showPrivacyModal, onPrivacyAgreed } = usePrivacyGate();
 
 const splitTabs = [
   { label: "换行", value: "newline" },

@@ -20,6 +20,20 @@
         "navigationStyle": "custom",
         "navigationBarTitleText": "历史记录"
       }
+    },
+    {
+      "path": "pages/legal/agreement",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "用户协议"
+      }
+    },
+    {
+      "path": "pages/legal/privacy",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "隐私政策"
+      }
     }
   ],
   "globalStyle": {

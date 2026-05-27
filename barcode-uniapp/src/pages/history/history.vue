@@ -1,4 +1,5 @@
 <template>
+  <PrivacyModal v-if="showPrivacyModal" @agreed="onPrivacyAgreed" />
   <view class="page" :class="themeClass">
     <AppNavBar
       title="历史记录"
@@ -36,6 +37,12 @@
       </view>
 
       <AdSlot />
+
+      <view class="legal-links">
+        <text class="legal-link" @tap="goLegal('/pages/legal/agreement')">用户协议</text>
+        <text class="legal-dot">·</text>
+        <text class="legal-link" @tap="goLegal('/pages/legal/privacy')">隐私政策</text>
+      </view>
     </view>
   </view>
 </template>
@@ -54,8 +61,11 @@ import {
 } from "@/utils/history.js";
 import { updateTabBar } from "@/utils/tabbar.js";
 import { useTheme } from "@/composables/useTheme.js";
+import { usePrivacyGate } from "@/composables/usePrivacyGate.js";
+import PrivacyModal from "@/components/PrivacyModal/PrivacyModal.vue";
 
 const { isDark, toggleTheme, themeClass } = useTheme();
+const { showPrivacyModal, onPrivacyAgreed } = usePrivacyGate();
 const list = ref([]);
 
 function formatLabel(item) {
@@ -67,6 +77,10 @@ function formatLabel(item) {
 
 function loadList() {
   list.value = getHistory();
+}
+
+function goLegal(url) {
+  uni.navigateTo({ url });
 }
 
 onShow(() => {
@@ -185,5 +199,22 @@ function handleClear() {
   &::after {
     border: none;
   }
+}
+
+.legal-links {
+  display: flex;
+  justify-content: center;
+  gap: 12rpx;
+  margin-top: 32rpx;
+}
+
+.legal-link {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.legal-dot {
+  font-size: 24rpx;
+  color: var(--text-placeholder);
 }
 </style>
